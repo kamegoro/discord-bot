@@ -1,6 +1,6 @@
 module.exports = {
   data: {
-    name: "setvoice",
+    name: "voice-actor",
     description: "Set Voice!",
     options: [
       {
