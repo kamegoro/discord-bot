@@ -40,7 +40,6 @@ client.on("ready", async () => {
     data.push(commands[commandName].data);
   }
   await client.application.commands.set(data);
-  // await client.application.commands.set(data, process.env.SERVER_TOKEN);
   console.log("Ready!");
 });
 
@@ -65,7 +64,7 @@ client.on("interactionCreate", async interaction => {
   }
 });
 
-client.on("messageCreate", async msg => {
+client.on("message", async msg => {
   if (msg.author.bot) {
     return;
   }
@@ -74,6 +73,8 @@ client.on("messageCreate", async msg => {
   if (!voice) {
     voice = default_voice;
   }
+
+  console.log(msg.cleanContent);
 
   var message = convertMessage(msg.cleanContent);
   await generateAudio(message, filepath, voice);
@@ -127,24 +128,12 @@ async function getConnection(interaction) {
   const memberVC = member.voice.channel;
   if (!memberVC) {
     console.log("接続先のVCが見つかりません");
-    // return interaction.reply({
-    //   content: "接続先のVCが見つかりません。",
-    //   ephemeral: true,
-    // });
   }
   if (!memberVC.joinable) {
     console.log("VCに接続できません。");
-    // return interaction.reply({
-    //   content: "VCに接続できません。",
-    //   ephemeral: true,
-    // });
   }
   if (!memberVC.speakable) {
     console.log("VCで音声を再生する権限がありません。");
-    // return interaction.reply({
-    //   content: "VCで音声を再生する権限がありません。",
-    //   ephemeral: true,
-    // });
   }
   return getVoiceConnection(memberVC.guild.id);
 }
@@ -164,22 +153,7 @@ async function play(interaction, filepath) {
   });
   player.play(resource);
 
-  const promises = [];
-  // promises.push(entersState(player, AudioPlayerStatus.AutoPaused, 1000 * 10).then(() => status[0] += "Done!"));
-  // promises.push(entersState(connection, VoiceConnectionStatus.Ready, 1000 * 10).then(() => status[1] += "Done!"));
-  // promises.push(entersState(player, AudioPlayerStatus.AutoPaused, 1000 * 10));
-  // promises.push(entersState(connection, VoiceConnectionStatus.Ready, 1000 * 10));
-  // await Promise.race(promises);
-  // await p;
-  // await Promise.all([...promises, interaction.editReply(status.join("\n"))]);
-  // await Promise.all([...promises]);
   connection.subscribe(player);
-  // await entersState(player, AudioPlayerStatus.Playing, 100);
-
-  // await interaction.editReply("Playing");
-  // await entersState(player, AudioPlayerStatus.Idle, 2 ** 31 - 1);
-  // await interaction.editReply("End");
-  // connection.destroy();
 }
 
 /**
